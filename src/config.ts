@@ -1,0 +1,1 @@
+export const GameURI = "http://192.168.10.102:5000/";
