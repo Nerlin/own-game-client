@@ -44,9 +44,9 @@ export default function withGameLocalStorage<T extends GameLocalStorageProps>(Co
                 if (playerKey) {
                     state.playerKey = playerKey;
                 }
-
-                state.gameId = gameId;
             }
+
+            state.gameId = gameId;
 
             this.props.gameState.update(state);
         }

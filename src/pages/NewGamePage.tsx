@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Redirect } from "react-router";
 import { compose } from "recompose";
-import withGameState, { GameStateComponentProps } from "../context/Game";
+import withGameLocalStorage, { GameLocalStorageProps } from "../context/GameLocalStorage";
 import withGameSocket, { GameSocketProps } from "../context/GameSocket";
 
 
@@ -10,12 +10,10 @@ export interface GameStartedMessage {
     host_key: string;
 }
 
-export interface NewGamePageProps extends GameSocketProps, GameStateComponentProps {
+export interface NewGamePageProps extends GameSocketProps, GameLocalStorageProps {
 }
 
 class NewGamePage extends React.Component<NewGamePageProps> {
-    protected initialized: boolean = false;
-
     public render() {
         if (this.props.gameState.gameId) {
             return <Redirect to={`/game/${this.props.gameState.gameId}/`}/>
@@ -35,14 +33,13 @@ class NewGamePage extends React.Component<NewGamePageProps> {
                 hostKey: message.host_key
             });
 
-            window.localStorage.setItem(`${message.game_id}.hostKey`, message.host_key);
+            this.props.setHostKey(message.host_key);
         });
         this.props.gameSocket.emit("start_game");
-        this.initialized = true;
     }
 }
 
 export default compose(
-    withGameState,
+    withGameLocalStorage,
     withGameSocket,
 )(NewGamePage);
